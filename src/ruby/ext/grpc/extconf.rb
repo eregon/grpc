@@ -36,6 +36,9 @@ end
 if ENV['LD'].nil? || ENV['LD'].size == 0
     ENV['LD'] = ENV['CC']
 end
+if ENV['LDXX'].nil? || ENV['LDXX'].size == 0
+  ENV['LDXX'] = ENV['CXX']
+end
 
 if RUBY_PLATFORM =~ /darwin/
   ENV['AR'] = 'libtool'
