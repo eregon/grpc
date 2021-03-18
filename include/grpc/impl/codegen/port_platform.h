@@ -35,7 +35,7 @@
 // This is disabled on Apple platforms because macos/grpc_basictests_c_cpp
 // fails with this. https://github.com/grpc/grpc/issues/23661
 #else
-#define GPR_ABSEIL_SYNC 1
+// #define GPR_ABSEIL_SYNC 1
 #endif
 #endif  // GPR_ABSEIL_SYNC
 
