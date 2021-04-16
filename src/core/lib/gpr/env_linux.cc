@@ -31,6 +31,7 @@
 #include <features.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <grpc/support/log.h>
 #include <grpc/support/string_util.h>
@@ -42,18 +43,21 @@ char* gpr_getenv(const char* name) {
   char* result = nullptr;
 #if defined(GPR_BACKWARDS_COMPATIBILITY_MODE)
   typedef char* (*getenv_type)(const char*);
-  static getenv_type getenv_func = nullptr;
+  static getenv_type getenv_func = getenv;
   /* Check to see which getenv variant is supported (go from most
    * to least secure) */
   if (getenv_func == nullptr) {
     const char* names[] = {"secure_getenv", "__secure_getenv", "getenv"};
     for (size_t i = 0; i < GPR_ARRAY_SIZE(names); i++) {
       getenv_func = (getenv_type)dlsym(RTLD_DEFAULT, names[i]);
+      fprintf(stderr, "gpr_getenv: trying function %s=%p\n", names[i], getenv_func);
       if (getenv_func != nullptr) {
+        fprintf(stderr, "gpr_getenv: found function %s %p\n", names[i], getenv_func);
         break;
       }
     }
   }
+  fprintf(stderr, "gpr_getenv: getenv_func=%p\n", getenv_func);
   result = getenv_func(name);
 #elif __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 17)
   result = secure_getenv(name);
